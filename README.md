@@ -1,1 +1,1 @@
-# employee-qr-code-generator
+# QR Code Generator for Employee Contacts
