@@ -1,0 +1,6 @@
+database:
+  host: bk-ssk-sqlpn01
+  port: 1433
+  user: CORP\MaksimenkoAN
+  password: 89241333110Vvv
+  name: BugNet_Employes
