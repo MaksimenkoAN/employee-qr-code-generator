@@ -35,14 +35,6 @@ func InitDB() error {
 	return db.Ping()
 }
 
-// Добавьте функции для работы с базой данных здесь
-// Например, получение информации о сотруднике по ID
-func GetEmployeeInfo(employeeID string) (string, string, string, error) {
-	// Пример получения данных о сотруднике
-	// Подключение к базе данных и выполнение запроса
-	return "John Doe", "+1234567890", "john.doe@example.com", nil
-}
-
 // GetUserId функция для получения ID ролей пользователя из БД
 func GetUserId(username string) []int {
 	var allUserIds []int
@@ -72,6 +64,7 @@ func GetUserId(username string) []int {
 	return allUserIds
 }
 
+// GetEmployeeMobileFromZupp функция, которая по EmployeeID получает мобильный номер телефона из БД ЗУП.
 func GetEmployeeMobileFromZupp(employeeID string) string {
 	var result sql.NullString
 

@@ -2,10 +2,10 @@ package handler
 
 import (
 	"employee-qr-code-generator/internal/database"
-	"employee-qr-code-generator/pkg/phone"
 	"employee-qr-code-generator/pkg/qr"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -25,14 +25,13 @@ func GenerateContactQRCode(c *gin.Context) {
 		}
 	}
 	employeeInfo := database.GetInfoEmployee(employeeID, addPrivileges)
-	//c.IndentedJSON(http.StatusOK, employeeInfo)
-	// Пример получения информации о сотруднике из базы данных
-	// Здесь должно быть вызов к функции из database, чтобы получить детали сотрудника
-	name := employeeInfo.Name // Пример данных
-	workPhone := phone.FixMobilePhone(employeeInfo.WorkPhone)
+	name := employeeInfo.Name
 	email := employeeInfo.Email
 	workAddress := employeeInfo.Address
 	mobilePhone := employeeInfo.MobilePhone
+	str := strings.ReplaceAll(employeeInfo.WorkPhone, " ext. ", ",,")
+	str = strings.ReplaceAll(str, " ", "")
+	workPhone := str
 
 	contactInfo := fmt.Sprintf(
 		"BEGIN:VCARD\nVERSION:3.0\nFN:%s\nTEL;TYPE=WORK:%s\nTEL;TYPE=CELL:%s\nADR;TYPE=WORK:%s\nEMAIL:%s\nEND:VCARD",

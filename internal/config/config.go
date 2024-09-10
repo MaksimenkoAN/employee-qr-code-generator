@@ -18,6 +18,7 @@ type Config struct {
 
 var AppConfig Config
 
+// LoadConfig функция, которая инициализирует глобальную переменную AppConfig значениями из файла.
 func LoadConfig(filePath string) error {
 	data, err := os.ReadFile(filePath)
 	if err != nil {

@@ -16,6 +16,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to load config: %v", err)
 	}
+	// Инициализация БД
 	err = database.InitDB()
 	if err != nil {
 		log.Fatalf("Ошибка подключения к базе данных: %v", err)
