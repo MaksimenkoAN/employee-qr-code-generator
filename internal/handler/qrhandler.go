@@ -2,6 +2,7 @@ package handler
 
 import (
 	"employee-qr-code-generator/internal/database"
+	"employee-qr-code-generator/pkg/phone"
 	"employee-qr-code-generator/pkg/qr"
 	"fmt"
 	"net/http"
@@ -28,7 +29,7 @@ func GenerateContactQRCode(c *gin.Context) {
 	// Пример получения информации о сотруднике из базы данных
 	// Здесь должно быть вызов к функции из database, чтобы получить детали сотрудника
 	name := employeeInfo.Name // Пример данных
-	workPhone := employeeInfo.WorkPhone
+	workPhone := phone.FixMobilePhone(employeeInfo.WorkPhone)
 	email := employeeInfo.Email
 	workAddress := employeeInfo.Address
 	mobilePhone := employeeInfo.MobilePhone
