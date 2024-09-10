@@ -11,6 +11,14 @@ import (
 
 var db *sql.DB
 
+type EmployeeInfo struct {
+	Name        string
+	WorkPhone   string
+	MobilePhone string
+	Email       string
+	Address     string
+}
+
 // InitDB функция подключения к БД
 func InitDB() error {
 	dbConfig := config.AppConfig.Database
@@ -62,4 +70,50 @@ func GetUserId(username string) []int {
 	}
 
 	return allUserIds
+}
+
+func GetEmployeeMobileFromZupp(employeeID string) string {
+	var result sql.NullString
+
+	query := `SELECT [MobilePhone] FROM [BugNet_Employes].[dbo].[Employes_ZUP] WHERE EmployeeID = ?`
+	rows, err := db.Query(query, employeeID)
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		err := rows.Scan(&result)
+		if err != nil {
+			panic(err)
+		}
+	}
+	return result.String
+}
+
+// GetInfoEmployee функция, которая по EmployeeID получает информация из БД. Если у пользователя есть привелегии, то также в результат будет добавлен мобильный номер телефона.
+func GetInfoEmployee(employeeid string, privilegies bool) EmployeeInfo {
+	var result EmployeeInfo
+	query := `SELECT [EmployeeID], [Name], [MidName], [SurName], [Login], [Organization], [WorkPhone], [MobilePhone], [Chief], [Secretary], [Email], [Room], [LastLogOn], [DistinguishedName] FROM [BugNet_Employes].[dbo].[Employes_AD] WHERE EmployeeID = ?`
+	rows, err := db.Query(query, employeeid)
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	//var str []string
+	var empID, name, midName, surName, login, org, workPhone, mobilePhone, chief, secretary, email, room, lastLogOn, distinguishedName sql.NullString
+	for rows.Next() {
+		err := rows.Scan(&empID, &name, &midName, &surName, &login, &org, &workPhone, &mobilePhone, &chief, &secretary, &email, &room, &lastLogOn, &distinguishedName)
+		if err != nil {
+			panic(err)
+		}
+		result.Name = surName.String + " " + name.String + " " + midName.String
+		result.WorkPhone = workPhone.String
+		result.Address = room.String
+		result.Email = email.String
+		if privilegies {
+			result.MobilePhone = GetEmployeeMobileFromZupp(employeeid)
+		}
+	}
+
+	return result
 }
